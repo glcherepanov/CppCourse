@@ -48,19 +48,45 @@ void pollEvents(sf::RenderWindow &window, sf::Vector2f &mousePosition)
 }
 
 //Обновляет фигуру, указывающую на мышь
-void update(const sf::Vector2f &mousePosition, sf::ConvexShape &pointer)
+void update(const sf::Vector2f &mousePosition, sf::ConvexShape &pointer, float deltaTime)
 {
-    const sf::Vector2 delta = mousePosition - pointer.getPosition();
+    const sf::Vector2f delta = mousePosition - pointer.getPosition();
+    const float maxAngleInSecond = 15;
     float angle = atan2(delta.y, delta.x);
-    angle = angle * 180.0 / M_PI;
-    std::cout << angle << std::endl;
-    float deltaR = pointer.getRotation() - angle;
-    std::cout << deltaR << std::endl;
-    if (deltaR >= 15)
+    const float maxRotationSpeed = maxAngleInSecond * deltaTime;
+    if (angle < 0)
     {
-        pointer.setRotation(pointer.getRotation() + 15);
+        angle += 2 * M_PI;
+    }
+    float rotationAngle = toDegrees(angle) - pointer.getRotation();
+    float rotationSpeed = std::abs(rotationAngle) * deltaTime;
+    if (rotationAngle != 0)
+    {
+        if (rotationAngle > 0)
+        {
+            if ((rotationAngle - 180) > 0)
+            {
+                pointer.setRotation(pointer.getRotation() - std::min(rotationSpeed, maxRotationSpeed));
+            }
+            else
+            {
+                pointer.setRotation(pointer.getRotation() + std::min(rotationSpeed, maxRotationSpeed));
+            }
+        }
+        else
+        {
+            if ((rotationAngle + 180) < 0)
+            {
+                pointer.setRotation(pointer.getRotation() + std::min(rotationSpeed, maxRotationSpeed));
+            }
+            else
+            {
+                pointer.setRotation(pointer.getRotation() - std::min(rotationSpeed, maxRotationSpeed));
+            }
+        }
     }
 }
+
 //рисует и выводит один кадр
 void redrawFrame(sf::RenderWindow &window, sf::ConvexShape &ellipse)
 {
@@ -82,12 +108,14 @@ int main()
 
     sf::ConvexShape pointer;
     sf::Vector2f mousePosition;
+    sf::Clock clock;
 
     init(pointer);
     while (window.isOpen())
     {
+        float deltaTime = clock.restart().asSeconds();
         pollEvents(window, mousePosition);
-        update(mousePosition, pointer);
+        update(mousePosition, pointer, deltaTime);
         redrawFrame(window, pointer);
     }
 }

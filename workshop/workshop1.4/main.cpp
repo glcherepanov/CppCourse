@@ -15,7 +15,6 @@ void initCat_Pointer(sf::Texture &textureCat, sf::Sprite &cat, sf::Texture &text
 
 void update(sf::Sprite &cat, sf::Sprite &pointer, sf::Vector2f &mousePosition, float dt)
 {
-    pointer.setPosition(mousePosition);
     const sf::Vector2 delta = mousePosition - cat.getPosition();
     sf::Vector2f moution = mousePosition - cat.getPosition();
     sf::Vector2f direction = {moution.x / sqrt(moution.x * moution.x + moution.y * moution.y), moution.y / sqrt(moution.x * moution.x + moution.y * moution.y)};
@@ -38,14 +37,7 @@ void update(sf::Sprite &cat, sf::Sprite &pointer, sf::Vector2f &mousePosition, f
     }
 }
 
-void onMouseMove(const sf::Event::MouseMoveEvent &event, sf::Vector2f &mousePosition)
-{
-    std::cout << "mouse x=" << event.x << " , y=" << event.y << std::endl;
-    mousePosition = {float(event.x),
-                     float(event.y)};
-}
-
-void pollEvents(sf::RenderWindow &window, sf::Vector2f &mousePosition)
+void pollEvents(sf::RenderWindow &window, sf::Vector2f &mousePosition, sf::Sprite &pointer, bool &flag)
 {
     sf::Event event;
     while (window.pollEvent(event))
@@ -55,8 +47,10 @@ void pollEvents(sf::RenderWindow &window, sf::Vector2f &mousePosition)
         case sf::Event::Closed:
             window.close();
             break;
-        case sf::Event::MouseMoved:
-            onMouseMove(event.mouseMove, mousePosition);
+        case sf::Event::MouseButtonReleased:
+            mousePosition = {float(event.mouseButton.x), float(event.mouseButton.y)};
+            pointer.setPosition(mousePosition);
+            flag = true;
             break;
         default:
             break;
@@ -64,11 +58,14 @@ void pollEvents(sf::RenderWindow &window, sf::Vector2f &mousePosition)
     }
 }
 
-void redrawFrame(sf::RenderWindow &window, sf::Sprite &cat, sf::Sprite &pointer)
+void redrawFrame(sf::RenderWindow &window, sf::Sprite &cat, sf::Sprite &pointer, bool &flag)
 {
     window.clear();
     window.draw(cat);
-    window.draw(pointer);
+    if (flag == true)
+    {
+        window.draw(pointer);
+    }
     window.display();
 }
 
@@ -93,13 +90,17 @@ int main()
     sf::Sprite pointer;
 
     sf::Clock clock;
+    bool flag = false;
 
     initCat_Pointer(textureCat, cat, texturePoint, pointer);
     while (window.isOpen())
     {
         const float dt = clock.restart().asSeconds();
-        pollEvents(window, mousePosition);
-        update(cat, pointer, mousePosition, dt);
-        redrawFrame(window, cat, pointer);
+        pollEvents(window, mousePosition, pointer, flag);
+        if (flag == true)
+        {
+            update(cat, pointer, mousePosition, dt);
+        }
+        redrawFrame(window, cat, pointer, flag);
     }
 }

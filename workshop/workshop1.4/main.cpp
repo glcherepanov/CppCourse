@@ -23,15 +23,18 @@ void update(sf::Sprite &cat, sf::Sprite &pointer, sf::Vector2f &mousePosition, f
     const float speed = MaxSpeed * dt;
     sf::Vector2f catPos = cat.getPosition();
     sf::Vector2f pointerPos = pointer.getPosition();
-    if (pointerPos.x - catPos.x > 0)
+    if (sqrt(pow(pointerPos.x - catPos.x, 2) + pow(pointerPos.y - catPos.y, 2)) >= 1)
     {
-        cat.setScale(1, 1);
-        cat.setPosition(cat.getPosition() + direction * speed);
-    }
-    if (pointerPos.x - catPos.x < 0)
-    {
-        cat.setScale(-1, 1);
-        cat.setPosition(cat.getPosition() + direction * speed);
+        if (pointerPos.x - catPos.x > 0)
+        {
+            cat.setScale(1, 1);
+            cat.setPosition(cat.getPosition() + direction * speed);
+        }
+        if (pointerPos.x - catPos.x < 0)
+        {
+            cat.setScale(-1, 1);
+            cat.setPosition(cat.getPosition() + direction * speed);
+        }
     }
 }
 

@@ -19,19 +19,30 @@ int main()
     arrow.setPosition({400, 300});
     arrow.setFillColor(sf::Color(0xFF, 0xFF, 0x0));
     arrow.setPointCount(7);
-    arrow.setPoint(0, {-40, 40});
-    arrow.setPoint(1, {0, 0});
-    arrow.setPoint(2, {40, 40});
-    arrow.setPoint(3, {20, 40});
-    arrow.setPoint(4, {20, 80});
-    arrow.setPoint(5, {-20, 80});
-    arrow.setPoint(6, {-20, 40});
+    arrow.setPoint(0, {0, 60});
+    arrow.setPoint(1, {60, 0});
+    arrow.setPoint(2, {0, -60});
+    arrow.setPoint(3, {0, -30});
+    arrow.setPoint(4, {-60, -30});
+    arrow.setPoint(5, {-60, 30});
+    arrow.setPoint(6, {0, 30});
     arrow.setOutlineColor(sf::Color(0, 0, 0));
     arrow.setOutlineThickness(2);
 
     while (window.isOpen())
     {
-        window.clear();
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            switch (event.type)
+            {
+            case sf::Event::Closed:
+                window.close();
+                break;
+            default:
+                break;
+            }
+        }
         window.draw(arrow);
         window.display();
     }

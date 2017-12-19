@@ -7,7 +7,7 @@ void initCat_Pointer(sf::Texture &textureCat, sf::Sprite &cat, sf::Texture &text
     textureCat.loadFromFile("../img/cat.png");
     cat.setTexture(textureCat);
     cat.setPosition(400, 400);
-    cat.setOrigin(34, 14);
+    cat.setOrigin(19, 12.5);
     texturePoint.loadFromFile("../img/red_pointer.png");
     pointer.setTexture(texturePoint);
     pointer.setOrigin(16, 16);

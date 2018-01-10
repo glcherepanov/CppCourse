@@ -81,21 +81,21 @@ void initBalls(std::vector<Ball> &balls, sf::Color *color, size_t colorSize, sf:
     std::cout << "collisionBalls:" << collisionBalls << std::endl;
 }
 
-sf::Vector2f collisionWalls(sf::Vector2f &speed, sf::Vector2f &pos, float BallSize, float width, float height)
+sf::Vector2f collisionWalls(sf::Vector2f &speed, sf::Vector2f &pos, float ballSize, float width, float height)
 {
-    if ((pos.x + BallSize > width) && (speed.x > 0))
+    if ((pos.x + ballSize > width) && (speed.x > 0))
     {
         speed.x = -speed.x;
     }
-    if ((pos.y + BallSize > height) && (speed.y > 0))
+    if ((pos.y + ballSize > height) && (speed.y > 0))
     {
         speed.y = -speed.y;
     }
-    if ((pos.x - BallSize < 0) && (speed.x < 0))
+    if ((pos.x - ballSize < 0) && (speed.x < 0))
     {
         speed.x = -speed.x;
     }
-    if ((pos.y - BallSize < 0) && (speed.y < 0))
+    if ((pos.y - ballSize < 0) && (speed.y < 0))
     {
         speed.y = -speed.y;
     }
